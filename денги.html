@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>денбги</title>
+    <style type="text/css">
+        body { 
+         font-size: 20px; 
+         color: rgb(0, 0, 0);
+        }
+        #display, button {
+            width: 150px;
+            height: 100px;
+            padding: 20px;
+            margin: 30px;
+            border-radius: 10px;
+            background: rgb(10, 88, 34);
+            color: rgb(36, 138, 50);
+        }
+        
+       </style>
+</head>
+<body background="https://kartinkin.net/pics/uploads/posts/2022-08/1660371882_45-kartinkin-net-p-novii-fon-sberbanka-krasivo-46.jpg"> 
+    <textarea id="First_name" placeholder="имя"></textarea>
+    <textarea id="Last_name" placeholder="фамилия"></textarea>
+    <textarea id="Card_1_number" placeholder="первая карта"></textarea>
+    <textarea id="Card_1_password" placeholder="пароль"></textarea>
+    <textarea id="Card_2_number" placeholder="вторая карта"></textarea>
+    <textarea id="Card_2_password" placeholder="пароль"></textarea>
+    <button onclick="Make_user()">создать пользователя</button>
+    <table border="10" align="right" bordercolor="10, 88, 34" bgcolor="15, 90, 60"><td><p><p>банкомат</p>
+    <button onclick="Insert_card()">введите пароль</button>
+    <button onclick="Pay_for_phone()">оплата мобильной связи</button>
+    <button onclick="Take_money()">снятие наличных</button>
+    <button onclick="add_money()">пополнение Счёта</button>
+    <button onclick="check_balance()">просмотр баланса</button>
+    <button onclick="change_password()">изменение пароля</button>
+    <button onclick="get_card_back()">извлечь карту</button>
+</table>
+<script>
+        user_arr = []
+        cards_arr = []
+        Active_card = ''
+        class card{
+            constructor(number, password, money){
+                this.number = number
+                this.password=password
+                this.money = 0
+            }
+        }
+        class user {
+            constructor(First_name, Last_name,Card_1, Card_2){
+                this.First_name = First_name
+                this.Last_name = Last_name
+                this.Card_1 = Card_1
+                this.Card_2 = Card_2
+            }
+        }
+        function Make_user(){
+            let First_name = document.getElementById('First_name').value
+            let Last_name = document.getElementById('Last_name').value
+            let Card_1_number = document.getElementById('Card_1_number').value
+            let Card_1_password = document.getElementById('Card_1_password').value
+            let Card_2_number = document.getElementById('Card_2_number').value
+            let Card_2_password = document.getElementById('Card_2_password').value
+            let can_set_user = true
+            for(let i = 0; i<user_arr.length; i++){
+                if(cards_arr[i].number == Card_1_number || Card_2_number){
+                    can_set_user=false
+                    alert('меняй Логин!')
+                }
+            }
+            if(Card_1_number==Card_2_number){
+                can_set_user=false
+                alert('меняй Логин!')
+            }
+            if(can_set_user){
+                let card_1 = new card(Card_1_number, Card_1_password,)
+                let card_2 = new card(Card_2_number, Card_2_password,)
+                let _user = new user(First_name, Last_name, card_1, card_2)
+                user_arr.push(_user)
+                cards_arr.push(card_1)
+                cards_arr.push(card_2)
+            }
+        }
+        function Insert_card(){
+                let card_check = prompt('вставьте карту (введите номер)')
+                for(let i = 0; i<=user_arr.length; i++){
+                    if(cards_arr[i].number == card_check){
+                        let password_check = prompt('введите пароль от карты')
+                        if(password_check == cards_arr[i].password){
+                            Active_card = cards_arr[i]
+                            alert('карта принята банкоматом')
+                        }
+                    }
+                }
+        }
+        function Pay_for_phone(){
+            if(Active_card != ''){
+                phone = prompt('сколько вы хотите положить денег')
+                if(phone <= Active_card.money){
+                    Active_card.money -= Number(phone)
+                    alert('деньги придут')
+                }
+                else {
+                    alert('недостаточно средств')
+                }
+                check_balance()
+            }
+            else alert('сначала приложите карту')
+        }
+        function Take_money(){
+            if(Active_card != ''){
+                cash = prompt('сколько вы хотите взять денег')
+                if(cash <= Active_card.money){
+                    Active_card.money -= Number(cash)
+                    alert('получите свои деньги')
+                }
+                else {
+                    alert('недостаточно средств')
+                }
+                check_balance()
+            }
+            else alert('сначала приложите карту')
+        }
+        function add_money(){
+            if(Active_card != ''){
+                cash = prompt('положите свои деньги в банкомат')
+                Active_card.money += Number(cash)
+                check_balance()
+            }
+            else alert('сначала приложите карту')
+        }
+        function check_balance(){
+            if(Active_card != ''){
+                alert('у вас '+ Active_card.money + ' денег')
+            }
+            else alert('сначала приложите карту')
+        }
+        function change_password(){
+            if(Active_card != ''){
+                new_password = prompt('введите новый пароль')
+                Active_card.password = new_password
+            }
+            else alert('сначала приложите карту')
+        }
+        function get_card_back(){
+            if(Active_card != ''){
+                alert('заберите свою карту')
+                Active_card = ''
+            }
+            else alert('сначала приложите карту')
+        }
+    </script>
+</body>
+</html>
